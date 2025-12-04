@@ -1,6 +1,6 @@
 #    -*- coding: utf-8 -*-
 #    Copyright (C) 2008, 2011 Ian Richardson*, Murray Thomson*, 2013 Lee Thomas**
-
+import idstring
 #    *CREST (Centre for Renewable Energy Systems Technology),
 #    Department of Electronic and Electrical Engineering
 #    Loughborough University, Leicestershire LE11 3TU, UK
@@ -33,6 +33,7 @@ from random import random
 import math
 import csv
 import time
+import matplotlib.pyplot as plt
 
 
 def create_profiles(n=1,month=7,daytype='weekday'):
@@ -41,13 +42,13 @@ def create_profiles(n=1,month=7,daytype='weekday'):
 	if daytype in ['weekday', 'weekend']:
 		pass
 	else:
-		print 'invalid day type, should be weekend or weekday'
+		print('invalid day type, should be weekend or weekday')
 		return 0
 
 	if month in range(1,13):
 		pass
 	else:
-		print 'invalid month type, should be int in range 1 to 12'
+		print('invalid month type, should be int in range 1 to 12')
 		return 0
 
 
@@ -334,15 +335,13 @@ def create_profiles(n=1,month=7,daytype='weekday'):
 		sim_dataQ_for_file[i][:] = sim_data_outputQ
 		
 ########################## Un-comment this section to see a plot of each generated profile ########################
-
-		# import matplotlib.pyplot as plt
-		# plt.plot(sim_data_outputP)
-		# plt.savefig('out_'+idstring+'.png')
+	plt.plot(sim_data_outputP)
+	plt.savefig('out_'+idstring+'.png')
 
 ###################################################################################################################
-		if i==0:
+	if i==0:
 			timet = time.time()-time1
-			print 'Approx time to completion = ' + str(timet*n) + ' seconds.'
+			print ('Approx time to completion = ' + str(timet*n) + ' seconds.')
 	# save sim_data to file here
 	Pfile = open('Pfile_'+idstring+'.dat', 'w')
 	
@@ -363,7 +362,7 @@ def create_profiles(n=1,month=7,daytype='weekday'):
 		Appliancesfile.write("\n")
 	Appliancesfile.close
 	timet = time.time()-time1
-	print 'Actual time to completion = ' + str(timet) + ' seconds.'	
+	print('Actual time to completion = ' + str(timet) + ' seconds.')
 	
 
 		
