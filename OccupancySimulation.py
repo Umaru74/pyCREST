@@ -1,8 +1,6 @@
-import os
-import sys
 import pandas as pd
 import numpy as np
-from pathlib import Path
+
 
 def RunOccupancySimulation():
     #Step 1 - user input: maximum occupancy number, weekdays or weekend
@@ -74,36 +72,30 @@ def RunOccupancySimulation():
         prob_row = prob_row.to_numpy().flatten()
         prob_row = prob_row / prob_row.sum()
         occ_next = np.random.choice(7, p = prob_row)
-        print(occ_profile)
-    
-    #Step 4 - Update the occ_sim_data
-    
-    file_path = Path("C:/Users/Mark/Documents/GitHub/pyCREST/occ_sim_data.txt")
-    
-    try:
-        if not file_path.exists():
-            raise FileNotFoundError(f"{file_path} does not exist")
         
-        # Read file
-        lines = file_path.read_text().splitlines()
-        print(f"Read {len(lines)} lines from {file_path.name}")
-        
-        # Update lines
-        for i, k in zip(range(7, 150), range(len(occ_profile))):
-            parts = lines[i].split()
-            if len(parts) < 3:
-                raise ValueError(f"Line {i} does not have enough columns: {parts}")
-            parts[2] = str(occ_profile[k])
-            lines[i] = "\t".join(parts)
-        
-        # Write back
-        file_path.write_text("\n".join(lines) + "\n")
-        print("File updated successfully.")
+    return occ_profile
+    # Step 4 - Update the occ_sim_data
     
-    except Exception as e:
-        print(f"Error: {e}")
+    # 1. Read all lines into memory and close the file immediately
+    #with open("occ_sim_data.txt", "r") as f:
+       # lines = f.readlines()
+    
+    # 2. Process and modify the data in the 'lines' list (in memory)
+    ## parts = lines[i].split()
+        
+        # Ensure the index is valid before assigning
+        #if len(parts) > 2:
+            #parts[2] = occ_profile[k]
+            # Use space or whatever delimiter you need; the original used split() without args (spaces/tabs)
+            #lines[i] = " ".join(map(str, parts)) + "\n"
+        #else:
+            # Handle lines that might be too short if necessary
+            #print(f"Skipping line {i} as it doesn't have enough columns.")
+    
+    # 3. Open the file again in write mode ('w') and write all modified lines
+    #with open("occ_sim_data.txt", "w") as f:
+       # f.writelines(lines)  # Removed the trailing comma
 
 
-RunOccupancySimulation()
 
 
