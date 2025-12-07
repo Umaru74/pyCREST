@@ -7,7 +7,7 @@ from OccupancySimulation import RunOccupancySimulation
 
 
 #Load active occupancy data from the above file
-df = RunOccupancySimulation()
+df, iResidents, day_type = RunOccupancySimulation()
 
 x = np.linspace(0,24,144)
 
@@ -17,7 +17,8 @@ plt.figure(figsize=(12,5))
 plt.step(x, df, where='post', linewidth=2.5)  # 'post' keeps step at current value
 plt.xlabel("Time")
 plt.ylabel("# of active occupants")
-plt.title("Active Occupancy")
+plt.title("Active Occupancy Profile \n"
+          "Number of Occupants:" + str(iResidents) + "  :  " +str(day_type))
 plt.grid(True)
 plt.xticks([0, 2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24],
            ["00:00", "02:00", "04:00", "06:00", "08:00", "10:00",

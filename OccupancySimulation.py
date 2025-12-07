@@ -73,7 +73,7 @@ def RunOccupancySimulation():
         prob_row = prob_row / prob_row.sum()
         occ_next = np.random.choice(7, p = prob_row)
         
-    return occ_profile
+    return occ_profile, iResidents, day_type
     # Step 4 - Update the occ_sim_data
     
     # 1. Read all lines into memory and close the file immediately
