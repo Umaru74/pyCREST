@@ -7,11 +7,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 
-file_path = 'occ_sim_data'
-
 #Load active occupancy data from the above file
 
-df = pd.read_csv("occ_sim_data", sep='\t', skiprows=6, header=None, )
+df = pd.read_csv("occ_sim_data", sep='\t', skiprows=6, header=None)
 df.columns = ["10minutes_count", "Time", "Occupants"]
 
 x = np.linspace(0,24,144)
