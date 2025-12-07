@@ -78,7 +78,7 @@ def RunOccupancySimulation():
     
     #Step 4 - Update the occ_sim_data
     
-    file_path = Path("C:/Temp/occ_sim_data.txt")
+    file_path = Path("C:/Users/Mark/Documents/GitHub/pyCREST/occ_sim_data.txt")
     
     try:
         if not file_path.exists():
