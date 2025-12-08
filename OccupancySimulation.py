@@ -76,25 +76,30 @@ def RunOccupancySimulation():
     return occ_profile, iResidents, day_type
     # Step 4 - Update the occ_sim_data
     
-    # 1. Read all lines into memory and close the file immediately
-    #with open("occ_sim_data.txt", "r") as f:
-       # lines = f.readlines()
-    
-    # 2. Process and modify the data in the 'lines' list (in memory)
-    ## parts = lines[i].split()
-        
-        # Ensure the index is valid before assigning
-        #if len(parts) > 2:
-            #parts[2] = occ_profile[k]
-            # Use space or whatever delimiter you need; the original used split() without args (spaces/tabs)
-            #lines[i] = " ".join(map(str, parts)) + "\n"
-        #else:
-            # Handle lines that might be too short if necessary
-            #print(f"Skipping line {i} as it doesn't have enough columns.")
-    
-    # 3. Open the file again in write mode ('w') and write all modified lines
-    #with open("occ_sim_data.txt", "w") as f:
-       # f.writelines(lines)  # Removed the trailing comma
+    # Read file
+    # with open("occ_sim_data.txt", "r") as f:
+    #     lines = f.readlines()
+    #
+    # # Safe loop
+    # for k in range(len(occ_profile)):
+    #     i = 7 + k
+    #
+    #     # ✅ Prevent out-of-range crash
+    #     if i >= len(lines):
+    #         print(f"Stopped at line {i} — file only has {len(lines)} lines")
+    #         break
+    #
+    #     parts = lines[i].split()
+    #
+    #     if len(parts) > 2:
+    #         parts[2] = str(occ_profile[k])
+    #         lines[i] = " ".join(parts) + "\n"
+    #     else:
+    #         print(f"Skipping line {i} — not enough columns")
+    #
+    # # Write back
+    # with open("occ_sim_data.txt", "w") as f:
+    #     f.writelines(lines)
 
 
 
