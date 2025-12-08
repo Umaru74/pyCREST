@@ -45,6 +45,7 @@ Day_of_the_year_that_summer_time_ends = get_int_input("What is the day of the ye
 Slope_of_panel = get_int_input("What is the slope of the panel (0 to 90)", 0,
                                90)  # 0: flat on the ground, 90:vertical wall
 Azimuth_of_panel = get_int_input("What is panel azimuth (°) [180 = North, 0 = South, ±90 = East/West]:", -90, 180)
+Ground_reflectance = get_int_input("What is the ground reflectance (0-1):", 0, 1)
 
 # Step-2: Calculating other variables based on the user inputs
 
