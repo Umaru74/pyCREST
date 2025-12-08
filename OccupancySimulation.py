@@ -84,7 +84,7 @@ def RunOccupancySimulation():
     # for k in range(len(occ_profile)):
     #     i = 7 + k
     #
-    #     # ✅ Prevent out-of-range crash
+    #     # Prevent out-of-range crash
     #     if i >= len(lines):
     #         print(f"Stopped at line {i} — file only has {len(lines)} lines")
     #         break
