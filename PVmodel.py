@@ -112,5 +112,5 @@ print(Clear_sky_beam_radiation_at_surface_horizontal)
 print(Direct_beam_radiation_on_panel)
 print(Sky_diffuse_factor)
 print(Diffuse_radiation_on_panel)
-
+print("a")
 
