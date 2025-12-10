@@ -133,4 +133,5 @@ for h in range(12, 15):
         rows.append([time_str, clear_sky_beam_radiation_at_surface, total_radiation_on_panel])
         
 df = pd.DataFrame(rows, columns=['Time', 'Clear Sky Beam Radiation', 'Total radiation on panel'])
-df.to_csv("PVmodel.csv", index=False)
+df.to_csv(r"C:\Users\Mark\Desktop\PVmodel_test.csv", index=False)
+print("Saved successfully!")
