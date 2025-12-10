@@ -74,33 +74,34 @@ def RunOccupancySimulation():
         occ_next = np.random.choice(7, p = prob_row)
         
     return occ_profile, iResidents, day_type
+
     # Step 4 - Update the occ_sim_data
     
-    # Read file
-    # with open("occ_sim_data.txt", "r") as f:
-    #     lines = f.readlines()
-    #
-    # # Safe loop
-    # for k in range(len(occ_profile)):
-    #     i = 7 + k
-    #
-    #     # Prevent out-of-range crash
-    #     if i >= len(lines):
-    #         print(f"Stopped at line {i} — file only has {len(lines)} lines")
-    #         break
-    #
-    #     parts = lines[i].split()
-    #
-    #     if len(parts) > 2:
-    #         parts[2] = str(occ_profile[k])
-    #         lines[i] = " ".join(parts) + "\n"
-    #     else:
-    #         print(f"Skipping line {i} — not enough columns")
-    #
-    # # Write back
-    # with open("occ_sim_data.txt", "w") as f:
-    #     f.writelines(lines)
-
-
+#     # Read file
+#     with open("occ_sim_data.txt", "r") as f:
+#         lines = f.readlines()
+#
+#     # Safe loop
+#     for k in range(len(occ_profile)):
+#         i = 7 + k
+#
+#         # Prevent out-of-range crash
+#         if i >= len(lines):
+#             print(f"Stopped at line {i} — file only has {len(lines)} lines")
+#             break
+#
+#         parts = lines[i].split()
+#
+#         if len(parts) > 2:
+#             parts[2] = str(occ_profile[k])
+#             lines[i] = " ".join(parts) + "\n"
+#         else:
+#             print(f"Skipping line {i} — not enough columns")
+#
+#     # Write back
+#     with open("occ_sim_data.txt", "w") as f:
+#         f.writelines(lines)
+#
+# RunOccupancySimulation()
 
 
