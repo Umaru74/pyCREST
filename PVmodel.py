@@ -8,6 +8,10 @@
 
 from math import sin, cos, tan, asin, acos, radians, degrees, exp, inf
 import pandas as pd
+import numpy as np
+import matplotlib
+matplotlib.use('TkAgg')  # or 'Qt5Agg' if you have PyQt installed
+import matplotlib.pyplot as plt
 
 
 def PVmodel_calculator(hour, minutes):
@@ -32,7 +36,7 @@ def PVmodel_calculator(hour, minutes):
     local_standard_time_meridian = 0
     b_value = float(360 * (day_of_the_year - 81) / 364)
     equation_of_time = (9.87 * sin(2 * radians(b_value))) - (7.53 * cos(radians(b_value))) - (
-                1.5 * sin(radians(b_value)))
+            1.5 * sin(radians(b_value)))
     time_correction_factor = (4 * (longitude - local_standard_time_meridian)) + equation_of_time
     hours_before_solar_noon = 12 - (
             local_standard_time_hour + (local_standard_time_minute / 60) + (time_correction_factor / 60))
@@ -80,58 +84,64 @@ def PVmodel_calculator(hour, minutes):
     
     return clear_sky_beam_radiation_at_surface_horizontal, total_radiation_on_panel
 
-
-# def get_float_input(prompt, min_val, max_val):
-#     while True:
-#         try:
-#             value = float(input(prompt))
-#             if min_val <= value <= max_val:
-#                 return value
-#             else:
-#                 print(f"Error: Please enter a value between {min_val} and {max_val}")
-#         except ValueError:
-#             print("Error: Please enter a valid float number")
-#
-#
-# def get_int_input(prompt, min_val, max_val):
-#     while True:
-#         try:
-#             value = int(input(prompt))
-#             if min_val <= value <= max_val:
-#                 return value
-#             else:
-#                 print(f"Error: Please enter a value between {min_val} and {max_val}")
-#         except ValueError:
-#             print("Error: Please enter a valid int number")
-
-# Step-2: Calculating other variables based on the user inputs
-
-
-# print(B_value)
-# print(Equation_of_time)
-# print(Time_correction_factor)
-# print(Hours_before_solar_noon)
-# print(Optical_depth)
-# print(Declination_delta)
-# print(Solar_altitude_angle_beta)
-# print(Azimuth_sun_theta)
-# print(Azimuth_angle_test)
-# print(Adjusted_azimuth_of_sun_theta)
-# print(Solar_incident_angle_on_panel)
-# print(Clear_sky_beam_radiation_at_surface_horizontal)
-# print(Direct_beam_radiation_on_panel)
-# print(Sky_diffuse_factor)
-# print(Diffuse_radiation_on_panel)
-# print(Reflected_radiation_on_panel)
-# print(Total_radiation_on_panel)
-
-rows = []
-for h in range(12, 15):
-    for m in range(0, 20):
-        time_str = f"{h:02d}:{m:02d}"
-        clear_sky_beam_radiation_at_surface, total_radiation_on_panel = PVmodel_calculator(h, m)
-        rows.append([time_str, clear_sky_beam_radiation_at_surface, total_radiation_on_panel])
+def PVmodel():
+    rows = []
+    clearness_index = []
+    file_path = "C:/Users/Mark/Documents/GitHub/pyCREST/PVmodel.tmp.csv"
+    
+    for h in range(0, 24):  # h = 1..23
+        for m in range(0, 60):  # m = 0..59
+            time_str = f"{h:02d}:{m:02d}"
+            clear_sky_beam_radiation_at_surface, total_radiation_on_panel = PVmodel_calculator(h, m)
+            rows.append([time_str, clear_sky_beam_radiation_at_surface, total_radiation_on_panel])
+    
+    df = pd.DataFrame(rows, columns=['Time', 'Clear Sky Beam Radiation', 'Total radiation on panel'])
+    
+    irradiance_df = pd.read_csv("irradiance.csv", index_col=0)
+    irradiance_matrix = irradiance_df.to_numpy()
+    clearness_index.append(1.0)
+    iCurrentStateBin = 101  # start with clear sky
+    
+    for iTimeStep in range(1, 1440):  # 1min resolution for a day
+        fRand = np.random.rand()  # random number between 0 and 1
+        fCumulativeP = 0  # reset the cumulative probability count
         
-df = pd.DataFrame(rows, columns=['Time', 'Clear Sky Beam Radiation', 'Total radiation on panel'])
-df.to_csv(r"C:\Users\Mark\Desktop\PVmodel_test.csv", index=False)
-print("Saved successfully!")
+        for i in range(0, 101):  # i = 0..100 in python index, checking the corresponding row
+            fCumulativeP += irradiance_matrix[iCurrentStateBin - 1][i]
+            
+            if fRand <= fCumulativeP:
+                iCurrentStateBin = i + 1  # convert to python index
+                break
+        
+        # convert bin index to clearness index
+        dk = 1 if iCurrentStateBin == 101 else round(((iCurrentStateBin / 100) - 0.01), 2)
+        clearness_index.append(dk)
+    
+    df['Clearness index'] = clearness_index
+    df['Outdoor global irradiance'] = df['Clear Sky Beam Radiation'] * df['Clearness index']
+    df['Net radiation on panel (W/m^2)'] = df['Total radiation on panel'] * df['Clearness index']
+    
+    fig, ax = plt.subplots(figsize=(12, 4))
+    
+    # Use step plots to keep each value constant until the next timestamp
+    ax.step(df['Time'], df['Clear Sky Beam Radiation'], where='post', label='Clear Sky Beam Radiation')
+    ax.step(df['Time'], df['Total radiation on panel'], where='post', label='Total radiation on panel')
+    ax.step(df['Time'], df['Net radiation on panel (W/m^2)'], where='post', label='Net radiation on panel')
+    
+    ax.set_xlabel('Time')
+    ax.set_ylabel('W / m^2', labelpad=5)
+    ax.grid(True)
+    ax.legend()
+    
+    # X-axis ticks every 1 hour
+    xticks = range(0, 1441,
+                   60)  # 0, 60, 120, ..., 1440 (10-sec resolution → 1 min = 6 points, but for labels use hours)
+    xticklabels = [f"{h:02d}:00" for h in range(0, 25)]  # 0:00 to 24:00
+    ax.set_xticks(xticks)
+    ax.set_xticklabels(xticklabels)
+    ax.set_xlim(0, 1440)
+    
+    plt.tight_layout()
+    
+    # Return figure and axis so main.py can handle showing/saving
+    return df['Outdoor global irradiance'], fig, ax
